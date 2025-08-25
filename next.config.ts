@@ -1,26 +1,48 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
   reactStrictMode: true,
-  webpack: (config, { isServer }) => {
+  webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
-        crypto: require.resolve('crypto-browserify'),
-        stream: require.resolve('stream-browserify'),
-        url: require.resolve('url'),
-        zlib: require.resolve('browserify-zlib'),
-        http: require.resolve('stream-http'),
-        https: require.resolve('https-browserify'),
-        assert: require.resolve('assert'),
-        os: require.resolve('os-browserify'),
-        path: require.resolve('path-browserify'),
-      };
+        crypto: false,
+        stream: false,
+        url: false,
+        zlib: false,
+        http: false,
+        https: false,
+        assert: false,
+        os: false,
+        path: false,
+        util: false,
+        events: false,
+        buffer: false,
+        process: false,
+      }
     }
-    return config;
+    
+    // Add rule for mjs files (for Solana/Web3 compatibility)
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+    })
+    
+    return config
+  },
+  // Add experimental features if needed for Solana
+  experimental: {
+    esmExternals: 'loose',
+  },
+  // Environment variables that can be accessed in the browser
+  env: {
+    NEXT_PUBLIC_SOLANA_NETWORK: process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet',
+    NEXT_PUBLIC_SOLANA_RPC_URL: process.env.NEXT_PUBLIC_SOLANA_RPC_URL || 'https://api.devnet.solana.com',
   },
 }
 
-module.exports = nextConfig
+export default nextConfig
