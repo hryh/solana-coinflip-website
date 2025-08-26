@@ -1,4 +1,3 @@
-cat > styles/globals.css << 'EOF'
 * {
   margin: 0;
   padding: 0;
@@ -159,5 +158,4 @@ html, body {
 }
 
 .wallet-adapter-button:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
+  background: rgba(255, 255, 255, 0.2)
